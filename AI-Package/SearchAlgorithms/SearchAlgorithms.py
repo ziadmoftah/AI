@@ -22,13 +22,73 @@ class SearchAlgorithms:
     path = []  # Represents the correct path from start node to the goal node.
     fullPath = []  # Represents all visited nodes from the start node to the goal node.
     totalCost = -1  # Represents the total cost in case using UCS, AStar (Euclidean or Manhattan)
+    maze = []
 
     def __init__(self, mazeStr, heristicValue=None):
         ''' mazeStr contains the full board
          The board is read row wise,
         the nodes are numbered 0-based starting
         the leftmost node'''
+        SearchAlgorithms.StringTo2D(self,mazeStr)
         pass
+
+    def StringTo2D(self, mazeStr):
+        rowCount = 1
+        colCount = 0
+        index = 0
+        flag = False
+        for i in mazeStr:
+            index += 1
+            if i == ' ':
+                rowCount += 1
+                if flag == False:
+                    flag = True
+                    colCount = int(index/2)
+
+        tempMaze = []
+
+        for i in range(rowCount):
+            col = []
+            for j in range(colCount):
+                col.append(Node('A'))
+            tempMaze.append(col)
+
+
+        rowIndex = 0
+        colIndex = 0
+        for i in mazeStr:
+            if i != ',' and i != ' ':
+                tempMaze[rowIndex][colIndex].value = i
+                tempMaze[rowIndex][colIndex].id = [rowIndex, colIndex]
+
+                colIndex += 1
+                if colIndex == colCount:
+                    colIndex = 0
+                    rowIndex += 1
+
+
+        rowIndex = 0
+        colIndex = 0
+        for i in mazeStr:
+            if i != ',' and i != ' ':
+                if rowIndex != 0:
+                    tempMaze[rowIndex][colIndex].up = tempMaze[rowIndex - 1][colIndex].value
+                if rowIndex != rowCount - 1:
+                    tempMaze[rowIndex][colIndex].down = tempMaze[rowIndex + 1][colIndex].value
+                if colIndex != 0:
+                    tempMaze[rowIndex][colIndex].left = tempMaze[rowIndex][colIndex - 1].value
+                if colIndex != colCount - 1:
+                    tempMaze[rowIndex][colIndex].right = tempMaze[rowIndex][colIndex + 1].value
+
+                colIndex += 1
+                if colIndex == colCount:
+                    colIndex = 0
+                    rowIndex += 1
+
+        self.maze = tempMaze
+
+
+
 
     def DLS(self):
         # Fill the correct path in self.path
@@ -38,6 +98,7 @@ class SearchAlgorithms:
     def BDS(self):
         # Fill the correct path in self.path
         # self.fullPath should contain the order of visited nodes
+        
         return self.path, self.fullPath
 
     def BFS(self):
@@ -48,10 +109,10 @@ class SearchAlgorithms:
 
 
 def main():
-    searchAlgo = SearchAlgorithms('S,.,.,#,.,.,. .,#,.,.,.,#,. .,#,.,.,.,.,. .,.,#,#,.,.,. #,.,#,E,.,#,.')
+    '''searchAlgo = SearchAlgorithms('S,.,.,#,.,.,. .,#,.,.,.,#,. .,#,.,.,.,.,. .,.,#,#,.,.,. #,.,#,E,.,#,.')
     path, fullPath = searchAlgo.DLS()
     print('**DFS**\nPath is: ' + str(path) + '\nFull Path is: ' + str(fullPath) + '\n\n')
-
+    '''
                 #######################################################################################
 
     searchAlgo = SearchAlgorithms('S,.,.,#,.,.,. .,#,.,.,.,#,. .,#,.,.,.,.,. .,.,#,#,.,.,. #,.,#,E,.,#,.')
@@ -59,7 +120,7 @@ def main():
     print('**BFS**\nPath is: ' + str(path) + '\nFull Path is: ' + str(fullPath) + '\n\n')
                 #######################################################################################
 
-    searchAlgo = SearchAlgorithms('S,.,.,#,.,.,. .,#,.,.,.,#,. .,#,.,.,.,.,. .,.,#,#,.,.,. #,.,#,E,.,#,.', [0, 15, 2, 100, 60, 35, 30, 3
+    '''searchAlgo = SearchAlgorithms('S,.,.,#,.,.,. .,#,.,.,.,#,. .,#,.,.,.,.,. .,.,#,#,.,.,. #,.,#,E,.,#,.', [0, 15, 2, 100, 60, 35, 30, 3
                                                                                                              , 100, 2, 15, 60, 100, 30, 2
                                                                                                              , 100, 2, 2, 2, 40, 30, 2, 2
                                                                                                              , 100, 100, 3, 15, 30, 100, 2
@@ -68,7 +129,7 @@ def main():
     print('** UCS **\nPath is: ' + str(path) + '\nFull Path is: ' + str(fullPath) + '\nTotal Cost: ' + str(
         TotalCost) + '\n\n')
                #######################################################################################
-
+    '''
 
 
 
