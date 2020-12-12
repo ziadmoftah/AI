@@ -122,7 +122,7 @@ class SearchAlgorithms:
         queueS = []
         queueE = []
         parentNodeE = None
-
+        parentNodeS = None
         visitedS = set()
         visitedE = set()
         startNode = self.maze[self.startNode[0]][self.startNode[1]]
@@ -134,49 +134,83 @@ class SearchAlgorithms:
         while queueS.__len__() > 0 and queueE.__len__() > 0:
             if queueS.__len__() > 0:
                 parentNodeS = queueS.pop(0)
-                visitedS.add(parentNodeS.id)
+                visitedS.add(parentNodeS)
                 self.fullPath.append(parentNodeS.id)
 
-                if parentNodeS in queueE or parentNodeS == parentNodeE:
+                if parentNodeS == parentNodeE or parentNodeS in queueE:
+                    if(parentNodeS in queueE):
+                        bla = queueE.index(parentNodeS)
+                        intersectNodeE = queueE[bla]
+                        intersectNodeS = parentNodeS.previousNode
+                    else:
+                        intersectNodeS = parentNodeS
+                        intersectNodeE = parentNodeE
+
+                    #print(parentNodeS.id,parentNodeE.id)
+                    #print(intersectNode.id)
+                    print('Break 1')
                     break
 
-                if parentNodeS.up != None and parentNodeS.up not in visitedS and parentNodeS.id[
-                    0] - 1 >= 0 and parentNodeS.up.value != '#':
+                if parentNodeS.up != None and parentNodeS.up not in visitedS and parentNodeS.up.value != '#':
+                    parentNodeS.up.previousNode = parentNodeS
                     visitedS.add(parentNodeS.up)
-                    queueS.append(self.maze[parentNodeS.id[0]][parentNodeS.id[1]])
+                    queueS.append(parentNodeS.up)
                 if parentNodeS.down != None and parentNodeS.down not in visitedS and parentNodeS.down.value != '#':
+                    parentNodeS.down.previousNode = parentNodeS
                     visitedS.add(parentNodeS.down)
                     queueS.append(parentNodeS.down)
                 if parentNodeS.left != None and parentNodeS.left not in visitedS and parentNodeS.left.value != '#':
+                    parentNodeS.left.previousNode = parentNodeS
                     visitedS.add(parentNodeS.left)
                     queueS.append(parentNodeS.left)
                 if parentNodeS.right != None and parentNodeS.right not in visitedS and parentNodeS.right.value != '#':
+                    parentNodeS.right.previousNode = parentNodeS
                     visitedS.add(parentNodeS.right)
                     queueS.append(parentNodeS.right)
 
             if queueE.__len__() > 0:
                 parentNodeE = queueE.pop(0)
-                visitedE.add(parentNodeE.id)
+                visitedE.add(parentNodeE)
                 self.fullPath.append(parentNodeE.id)
 
-                if parentNodeE in queueS or parentNodeE == parentNodeS:
+                if parentNodeE == parentNodeS or parentNodeE in queueS:
+                    if(parentNodeE in queueS):
+                        bla = queueS.index(parentNodeE)
+                        intersectNodeS = queueS[bla]
+                        intersectNodeE = parentNodeE.previousNode
+                    else:
+                        intersectNodeS = parentNodeS
+                        intersectNodeE = parentNodeE
+                    print('Break 2')
                     break
-                if parentNodeE.up != None and parentNodeE.up not in visitedE:
+
+                if parentNodeE.up != None and parentNodeE.up not in visitedE and parentNodeE.up.value != '#':
+                    parentNodeE.up.previousNode = parentNodeE
                     visitedE.add(parentNodeE.up)
                     queueE.append(parentNodeE.up)
-                if parentNodeE.down != None and parentNodeE.down not in visitedE:
+                if parentNodeE.down != None and parentNodeE.down not in visitedE and parentNodeE.down.value != '#':
+                    parentNodeE.down.previousNode = parentNodeE
                     visitedE.add(parentNodeE.down)
                     queueE.append(parentNodeE.down)
-                if parentNodeE.left != None and parentNodeE.left not in visitedE:
+                if parentNodeE.left != None and parentNodeE.left not in visitedE and parentNodeE.left.value != '#':
+                    parentNodeE.left.previousNode = parentNodeE
                     visitedE.add(parentNodeE.left)
                     queueE.append(parentNodeE.left)
-                if parentNodeE.right != None and parentNodeE.right not in visitedE:
+                if parentNodeE.right != None and parentNodeE.right not in visitedE and parentNodeE.right.value != '#':
+                    parentNodeE.right.previousNode = parentNodeE
                     visitedE.add(parentNodeE.right)
                     queueE.append(parentNodeE.right)
 
-
+        while(intersectNodeE.previousNode != None):
+            print(intersectNodeE.id)
+            intersectNodeE = intersectNodeE.previousNode
+        print('============')
+        while (intersectNodeS.previousNode != None):
+            print(intersectNodeS.id)
+            intersectNodeS = intersectNodeS.previousNode
 
         return self.path, self.fullPath
+
 
     def BFS(self):
         # Fill the correct path in self.path
@@ -192,7 +226,7 @@ def main():
     '''
                 #######################################################################################
 
-    '''searchAlgo = SearchAlgorithms('S,.,.,#,.,.,. .,#,.,.,.,#,. .,#,.,.,.,.,. .,.,#,#,.,.,. #,.,#,E,.,#,.')
+    searchAlgo = SearchAlgorithms('S,.,.,#,.,.,. .,#,.,.,.,#,. .,#,.,.,.,.,. .,.,#,#,.,.,. #,.,#,E,.,#,.')
     path, fullPath = searchAlgo.BDS()
     print('**BFS**\nPath is: ' + str(path) + '\nFull Path is: ' + str(fullPath) + '\n\n')
                 #######################################################################################
@@ -206,7 +240,7 @@ def main():
     print('** UCS **\nPath is: ' + str(path) + '\nFull Path is: ' + str(fullPath) + '\nTotal Cost: ' + str(
         TotalCost) + '\n\n')
                #######################################################################################
-
+    '''
 
 
 
