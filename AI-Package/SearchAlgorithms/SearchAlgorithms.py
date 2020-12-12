@@ -156,7 +156,6 @@ class SearchAlgorithms:
 
                     #print(parentNodeS.id,parentNodeE.id)
                     #print(intersectNode.id)
-                    print('Break 1')
                     break
 
                 if parentNodeS.up != None and parentNodeS.up not in visitedS and parentNodeS.up.value != '#':
@@ -192,7 +191,6 @@ class SearchAlgorithms:
                     else:
                         intersectNodeS = parentNodeS
                         intersectNodeE = parentNodeE
-                    print('Break 2')
                     break
 
                 if parentNodeE.up != None and parentNodeE.up not in visitedE and parentNodeE.up.value != '#':
