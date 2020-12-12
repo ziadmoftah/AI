@@ -1,3 +1,4 @@
+from copy import copy, deepcopy
 
 class Node:
     id = None  # Unique value for each node.
@@ -125,8 +126,11 @@ class SearchAlgorithms:
         parentNodeS = None
         visitedS = set()
         visitedE = set()
-        startNode = self.maze[self.startNode[0]][self.startNode[1]]
-        endNode = self.maze[self.endNode[0]][self.endNode[1]]
+        mazeE = deepcopy(self.maze)
+        mazeS = deepcopy(self.maze)
+
+        startNode = mazeS[self.startNode[0]][self.startNode[1]]
+        endNode = mazeE[self.endNode[0]][self.endNode[1]]
         queueE.append(endNode)
         queueS.append(startNode)
 
@@ -136,10 +140,14 @@ class SearchAlgorithms:
                 parentNodeS = queueS.pop(0)
                 visitedS.add(parentNodeS)
                 self.fullPath.append(parentNodeS.id)
+                tempE = []
+                for i in queueE:
 
-                if parentNodeS == parentNodeE or parentNodeS in queueE:
-                    if(parentNodeS in queueE):
-                        bla = queueE.index(parentNodeS)
+                    tempE.append(i.id)
+
+                if parentNodeE != None and (parentNodeS.id == parentNodeE.id or parentNodeS.id in tempE):
+                    if(parentNodeS.id in tempE):
+                        bla = tempE.index(parentNodeS.id)
                         intersectNodeE = queueE[bla]
                         intersectNodeS = parentNodeS.previousNode
                     else:
@@ -173,9 +181,12 @@ class SearchAlgorithms:
                 visitedE.add(parentNodeE)
                 self.fullPath.append(parentNodeE.id)
 
-                if parentNodeE == parentNodeS or parentNodeE in queueS:
+                tempS = []
+                for i in queueS:
+                    tempS.append(i.id)
+                if parentNodeE == parentNodeS or parentNodeE.id in tempS:
                     if(parentNodeE in queueS):
-                        bla = queueS.index(parentNodeE)
+                        bla = tempS.index(parentNodeE.id)
                         intersectNodeS = queueS[bla]
                         intersectNodeE = parentNodeE.previousNode
                     else:
@@ -201,13 +212,20 @@ class SearchAlgorithms:
                     visitedE.add(parentNodeE.right)
                     queueE.append(parentNodeE.right)
 
-        while(intersectNodeE.previousNode != None):
-            print(intersectNodeE.id)
-            intersectNodeE = intersectNodeE.previousNode
-        print('============')
+        show = []
         while (intersectNodeS.previousNode != None):
-            print(intersectNodeS.id)
+            show.append(intersectNodeS.id)
             intersectNodeS = intersectNodeS.previousNode
+        show.append(intersectNodeS.id)
+        show.reverse()
+
+        for i in show:
+            self.path.append(i)
+        while (intersectNodeE.previousNode != None):
+            self.path.append(intersectNodeE.id)
+            intersectNodeE = intersectNodeE.previousNode
+        self.path.append(intersectNodeE.id)
+
 
         return self.path, self.fullPath
 
