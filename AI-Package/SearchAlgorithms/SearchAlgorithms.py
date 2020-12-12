@@ -108,10 +108,6 @@ class SearchAlgorithms:
 
         self.maze = tempMaze
 
-        for i in self.maze:
-            for j in i:
-                print(j.value, end = ' ')
-            print('')
 
 
 
@@ -133,8 +129,7 @@ class SearchAlgorithms:
         endNode = self.maze[self.endNode[0]][self.endNode[1]]
         queueE.append(endNode)
         queueS.append(startNode)
-        Lol = self.maze[0][0].down
-        print(Lol.value)
+
 
         while queueS.__len__() > 0 and queueE.__len__() > 0:
             if queueS.__len__() > 0:
