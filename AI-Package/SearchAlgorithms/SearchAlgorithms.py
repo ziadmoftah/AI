@@ -12,12 +12,7 @@ class Node:
     hOfN = None  # Represents the heuristic value
     heuristicFn = None  # Represents the value of heuristic function
 
-    def __init__(self, value, id = None, up = None, down = None, left = None, right = None):
-        self.id = id
-        self.up = up
-        self. down = down
-        self.left = left
-        self.right = right
+    def __init__(self, value):
         self.value = value
 
 
@@ -126,6 +121,7 @@ class SearchAlgorithms:
         parentNodeS = None
         visitedS = set()
         visitedE = set()
+
         mazeE = deepcopy(self.maze)
         mazeS = deepcopy(self.maze)
 
@@ -133,7 +129,6 @@ class SearchAlgorithms:
         endNode = mazeE[self.endNode[0]][self.endNode[1]]
         queueE.append(endNode)
         queueS.append(startNode)
-
 
         while queueS.__len__() > 0 and queueE.__len__() > 0:
             if queueS.__len__() > 0:
