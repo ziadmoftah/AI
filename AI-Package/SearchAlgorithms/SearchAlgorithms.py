@@ -11,8 +11,15 @@ class Node:
     hOfN = None  # Represents the heuristic value
     heuristicFn = None  # Represents the value of heuristic function
 
-    def __init__(self, value):
+    def __init__(self, value, id = None, up = None, down = None, left = None, right = None):
+        self.id = id
+        self.up = up
+        self. down = down
+        self.left = left
+        self.right = right
         self.value = value
+
+
 
 
 class SearchAlgorithms:
@@ -32,10 +39,10 @@ class SearchAlgorithms:
          The board is read row wise,
         the nodes are numbered 0-based starting
         the leftmost node'''
-        SearchAlgorithms.StringTo2D(self,mazeStr)
+        SearchAlgorithms.StringTo2D(self,mazeStr,heristicValue)
         pass
 
-    def StringTo2D(self, mazeStr):
+    def StringTo2D(self, mazeStr,heristicValue):
         rowCount = 1
         colCount = 0
         index = 0
@@ -56,15 +63,19 @@ class SearchAlgorithms:
                 col.append(Node('A'))
             tempMaze.append(col)
 
-
+        index = 0
         rowIndex = 0
         colIndex = 0
         for i in mazeStr:
             if i != ',' and i != ' ':
 
-
                 tempMaze[rowIndex][colIndex].value = i
                 tempMaze[rowIndex][colIndex].id = (rowIndex, colIndex)
+                if heristicValue == None:
+                    tempMaze[rowIndex][colIndex].edgeCost = 0
+                else:
+                    tempMaze[rowIndex][colIndex].edgeCost = heristicValue[index]
+                index += 1
                 if i == 'S':
                     self.startNode = [rowIndex, colIndex]
                 if i == 'E':
@@ -81,13 +92,14 @@ class SearchAlgorithms:
         for i in mazeStr:
             if i != ',' and i != ' ':
                 if rowIndex != 0:
-                    tempMaze[rowIndex][colIndex].up = tempMaze[rowIndex - 1][colIndex].id
+                    tempMaze[rowIndex][colIndex].up = tempMaze[rowIndex - 1][colIndex]
                 if rowIndex != rowCount - 1:
-                    tempMaze[rowIndex][colIndex].down = tempMaze[rowIndex + 1][colIndex].id
+                    tempMaze[rowIndex][colIndex].down = tempMaze[rowIndex + 1][colIndex]
                 if colIndex != 0:
-                    tempMaze[rowIndex][colIndex].left = tempMaze[rowIndex][colIndex - 1].id
+                    tempMaze[rowIndex][colIndex].left = tempMaze[rowIndex][colIndex - 1]
                 if colIndex != colCount - 1:
-                    tempMaze[rowIndex][colIndex].right = tempMaze[rowIndex][colIndex + 1].id
+                    tempMaze[rowIndex][colIndex].right = tempMaze[rowIndex][colIndex + 1]
+
 
                 colIndex += 1
                 if colIndex == colCount:
@@ -96,6 +108,10 @@ class SearchAlgorithms:
 
         self.maze = tempMaze
 
+        for i in self.maze:
+            for j in i:
+                print(j.value, end = ' ')
+            print('')
 
 
 
@@ -107,61 +123,7 @@ class SearchAlgorithms:
     def BDS(self):
         # Fill the correct path in self.path
         # self.fullPath should contain the order of visited nodes
-        queueS = []
-        queueE = []
-        parentNodeE = None
 
-        visitedS = set()
-        visitedE = set()
-        startNode = self.maze[self.startNode[0]][self.startNode[1]]
-        endNode = self.maze[self.endNode[0]][self.endNode[1]]
-        queueE.append(endNode)
-        queueS.append(startNode)
-
-        while queueS.__len__() > 0 and queueE.__len__() > 0:
-            if queueS.__len__() > 0:
-                parentNodeS = queueS.pop(0)
-                visitedS.add(parentNodeS.id)
-                self.fullPath.append(parentNodeS.id)
-
-                if parentNodeS in queueE or parentNodeS == parentNodeE:
-
-                    break
-
-                if parentNodeS.up != None and parentNodeS.up not in visitedS and parentNodeS.id[0]-1 >= 0 and self.maze[parentNodeS.id[0]-1][parentNodeS.id[1]].value != '#':
-                    visitedS.add(parentNodeS.up)
-                    queueS.append(self.maze[parentNodeS.id[0]][parentNodeS.id[1]])
-                if parentNodeS.down != None and parentNodeS.down not in visitedS and self.maze[parentNodeS.id[0]+1][parentNodeS.id[1]].value != '#':
-                    visitedS.add(parentNodeS.down)
-                    queueS.append(parentNodeS.down)
-                if parentNodeS.left != None and parentNodeS.left not in visitedS and self.maze[parentNodeS.id[0]][parentNodeS.id[1]-1].value != '#':
-                    visitedS.add(parentNodeS.left)
-                    queueS.append(parentNodeS.left)
-                if parentNodeS.right != None and parentNodeS.right not in visitedS and self.maze[parentNodeS.id[0]][parentNodeS.id[1]+1].value != '#':
-                    visitedS.add(parentNodeS.right)
-                    queueS.append(parentNodeS.right)
-
-
-
-            if queueE.__len__() > 0:
-                parentNodeE = queueE.pop(0)
-                visitedE.add(parentNodeE.id)
-                self.fullPath.append(parentNodeE.id)
-
-                if parentNodeE in queueS or parentNodeE == parentNodeS:
-                    break
-                if parentNodeE.up != None and parentNodeE.up not in visitedE:
-                    visitedE.add(parentNodeE.up)
-                    queueE.append(parentNodeE.up)
-                if parentNodeE.down != None and parentNodeE.down not in visitedE:
-                    visitedE.add(parentNodeE.down)
-                    queueE.append(parentNodeE.down)
-                if parentNodeE.left != None and parentNodeE.left not in visitedE:
-                    visitedE.add(parentNodeE.left)
-                    queueE.append(parentNodeE.left)
-                if parentNodeE.right != None and parentNodeE.right not in visitedE:
-                    visitedE.add(parentNodeE.right)
-                    queueE.append(parentNodeE.right)
 
 
 
@@ -181,12 +143,12 @@ def main():
     '''
                 #######################################################################################
 
-    searchAlgo = SearchAlgorithms('S,.,.,#,.,.,. .,#,.,.,.,#,. .,#,.,.,.,.,. .,.,#,#,.,.,. #,.,#,E,.,#,.')
+    '''searchAlgo = SearchAlgorithms('S,.,.,#,.,.,. .,#,.,.,.,#,. .,#,.,.,.,.,. .,.,#,#,.,.,. #,.,#,E,.,#,.')
     path, fullPath = searchAlgo.BDS()
     print('**BFS**\nPath is: ' + str(path) + '\nFull Path is: ' + str(fullPath) + '\n\n')
                 #######################################################################################
-
-    '''searchAlgo = SearchAlgorithms('S,.,.,#,.,.,. .,#,.,.,.,#,. .,#,.,.,.,.,. .,.,#,#,.,.,. #,.,#,E,.,#,.', [0, 15, 2, 100, 60, 35, 30, 3
+    '''
+    searchAlgo = SearchAlgorithms('S,.,.,#,.,.,. .,#,.,.,.,#,. .,#,.,.,.,.,. .,.,#,#,.,.,. #,.,#,E,.,#,.', [0, 15, 2, 100, 60, 35, 30, 3
                                                                                                              , 100, 2, 15, 60, 100, 30, 2
                                                                                                              , 100, 2, 2, 2, 40, 30, 2, 2
                                                                                                              , 100, 100, 3, 15, 30, 100, 2
@@ -195,7 +157,7 @@ def main():
     print('** UCS **\nPath is: ' + str(path) + '\nFull Path is: ' + str(fullPath) + '\nTotal Cost: ' + str(
         TotalCost) + '\n\n')
                #######################################################################################
-    '''
+
 
 
 
