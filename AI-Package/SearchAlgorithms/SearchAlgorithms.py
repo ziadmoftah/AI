@@ -123,7 +123,61 @@ class SearchAlgorithms:
     def BDS(self):
         # Fill the correct path in self.path
         # self.fullPath should contain the order of visited nodes
+        queueS = []
+        queueE = []
+        parentNodeE = None
 
+        visitedS = set()
+        visitedE = set()
+        startNode = self.maze[self.startNode[0]][self.startNode[1]]
+        endNode = self.maze[self.endNode[0]][self.endNode[1]]
+        queueE.append(endNode)
+        queueS.append(startNode)
+        Lol = self.maze[0][0].down
+        print(Lol.value)
+
+        while queueS.__len__() > 0 and queueE.__len__() > 0:
+            if queueS.__len__() > 0:
+                parentNodeS = queueS.pop(0)
+                visitedS.add(parentNodeS.id)
+                self.fullPath.append(parentNodeS.id)
+
+                if parentNodeS in queueE or parentNodeS == parentNodeE:
+                    break
+
+                if parentNodeS.up != None and parentNodeS.up not in visitedS and parentNodeS.id[
+                    0] - 1 >= 0 and parentNodeS.up.value != '#':
+                    visitedS.add(parentNodeS.up)
+                    queueS.append(self.maze[parentNodeS.id[0]][parentNodeS.id[1]])
+                if parentNodeS.down != None and parentNodeS.down not in visitedS and parentNodeS.down.value != '#':
+                    visitedS.add(parentNodeS.down)
+                    queueS.append(parentNodeS.down)
+                if parentNodeS.left != None and parentNodeS.left not in visitedS and parentNodeS.left.value != '#':
+                    visitedS.add(parentNodeS.left)
+                    queueS.append(parentNodeS.left)
+                if parentNodeS.right != None and parentNodeS.right not in visitedS and parentNodeS.right.value != '#':
+                    visitedS.add(parentNodeS.right)
+                    queueS.append(parentNodeS.right)
+
+            if queueE.__len__() > 0:
+                parentNodeE = queueE.pop(0)
+                visitedE.add(parentNodeE.id)
+                self.fullPath.append(parentNodeE.id)
+
+                if parentNodeE in queueS or parentNodeE == parentNodeS:
+                    break
+                if parentNodeE.up != None and parentNodeE.up not in visitedE:
+                    visitedE.add(parentNodeE.up)
+                    queueE.append(parentNodeE.up)
+                if parentNodeE.down != None and parentNodeE.down not in visitedE:
+                    visitedE.add(parentNodeE.down)
+                    queueE.append(parentNodeE.down)
+                if parentNodeE.left != None and parentNodeE.left not in visitedE:
+                    visitedE.add(parentNodeE.left)
+                    queueE.append(parentNodeE.left)
+                if parentNodeE.right != None and parentNodeE.right not in visitedE:
+                    visitedE.add(parentNodeE.right)
+                    queueE.append(parentNodeE.right)
 
 
 
