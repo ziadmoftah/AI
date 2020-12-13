@@ -42,7 +42,7 @@ class SearchAlgorithms:
         SearchAlgorithms.StringTo2D(self,mazeStr,heristicValue)
         pass
 
-    def StringTo2D(self, mazeStr,heristicValue):
+    def StringTo2D(self, mazeStr,heristicValue):   #Changes the maze from the string format into a 2D array of Nodes
         rowCount = 1
         colCount = 0
         index = 0
