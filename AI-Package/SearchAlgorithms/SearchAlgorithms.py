@@ -1,4 +1,6 @@
 from copy import copy, deepcopy
+from queue import PriorityQueue
+
 
 class Node:
     id = None  # Unique value for each node.
@@ -115,6 +117,8 @@ class SearchAlgorithms:
     def BDS(self):
         # Fill the correct path in self.path
         # self.fullPath should contain the order of visited nodes
+        self.path.clear()
+        self.fullPath.clear()
         queueS = []
         queueE = []
         parentNodeE = None
@@ -224,6 +228,54 @@ class SearchAlgorithms:
 
 
     def BFS(self):
+        self.path.clear()
+        self.fullPath.clear()
+        startNode=self.maze[self.startNode[0]][self.startNode[1]]
+        pq= PriorityQueue()
+        startNode.gOfN=0
+        pq.put((0,startNode.id))
+        self.fullPath.append(startNode.id)
+        while pq.empty()==False:
+            index = pq.get()[1]
+            parentNode = self.maze[index[0]][index[1]]
+            if parentNode.value == 'E':
+                break
+            if parentNode.up != None and parentNode.up.id not in self.fullPath:
+
+                parentNode.up.gOfN= parentNode.gOfN+parentNode.up.edgeCost
+                parentNode.up.previousNode = parentNode
+                pq.put((parentNode.up.edgeCost, parentNode.up.id))
+                self.fullPath.append(parentNode.up.id)
+
+            if parentNode.down != None and parentNode.down.id not in self.fullPath:
+                parentNode.down.gOfN = parentNode.gOfN + parentNode.down.edgeCost
+                parentNode.down.previousNode = parentNode
+                pq.put((parentNode.down.edgeCost, parentNode.down.id))
+                self.fullPath.append(parentNode.down.id)
+
+            if parentNode.right != None and parentNode.right.id not in self.fullPath:
+                parentNode.right.gOfN = parentNode.gOfN + parentNode.right.edgeCost
+                parentNode.right.previousNode = parentNode
+                pq.put((parentNode.right.edgeCost, parentNode.right.id))
+                self.fullPath.append(parentNode.right.id)
+
+            if parentNode.left != None and parentNode.left.id not in self.fullPath:
+                parentNode.left.gOfN = parentNode.gOfN + parentNode.left.edgeCost
+                parentNode.left.previousNode = parentNode
+                pq.put((parentNode.left.edgeCost, parentNode.left.id))
+                self.fullPath.append(parentNode.left.id)
+
+        #get the full path
+        #calculate total cost of the path
+        self.totalCost=parentNode.gOfN
+
+        #calculate the path
+        while parentNode.previousNode != None:
+            self.path.append(parentNode.id)
+            parentNode=parentNode.previousNode
+
+        self.path.append(startNode.id)
+        self.path.reverse()
         # Fill the correct path in self.path
         # self.fullPath should contain the order of visited nodes
         return self.path, self.fullPath, self.totalCost
@@ -241,17 +293,17 @@ def main():
     path, fullPath = searchAlgo.BDS()
     print('**BFS**\nPath is: ' + str(path) + '\nFull Path is: ' + str(fullPath) + '\n\n')
                 #######################################################################################
-    '''
-    searchAlgo = SearchAlgorithms('S,.,.,#,.,.,. .,#,.,.,.,#,. .,#,.,.,.,.,. .,.,#,#,.,.,. #,.,#,E,.,#,.', [0, 15, 2, 100, 60, 35, 30, 3
-                                                                                                             , 100, 2, 15, 60, 100, 30, 2
-                                                                                                             , 100, 2, 2, 2, 40, 30, 2, 2
-                                                                                                             , 100, 100, 3, 15, 30, 100, 2
-                                                                                                             , 100, 0, 2, 100, 30])
+
+    searchAlgo = SearchAlgorithms('S,.,.,#,.,.,. .,#,.,.,.,#,. .,#,.,.,.,.,. .,.,#,#,.,.,. #,.,#,E,.,#,.', [0, 15, 2, 100, 60, 35, 30,
+                                                                                                             3, 100, 2, 15, 60, 100, 30,
+                                                                                                             2 , 100, 2, 2, 2, 40, 30,
+                                                                                                              2, 2, 100, 100, 3, 15, 30,
+                                                                                                             100, 2 , 100, 0, 2, 100, 30])
     path, fullPath, TotalCost = searchAlgo.BFS()
     print('** UCS **\nPath is: ' + str(path) + '\nFull Path is: ' + str(fullPath) + '\nTotal Cost: ' + str(
         TotalCost) + '\n\n')
                #######################################################################################
-    '''
+
 
 
 
