@@ -149,14 +149,15 @@ class SearchAlgorithms:
 
     def GetChildren(self, current_node):
         children = []
-        if current_node.down != None and current_node.down.value != '#':
-            children.append(current_node.down)
         if current_node.up != None and current_node.up.value != '#':
             children.append(current_node.up)
-        if current_node.right != None and current_node.right.value != '#':
-            children.append(current_node.right)
+        if current_node.down != None and current_node.down.value != '#':
+            children.append(current_node.down)
         if current_node.left != None and current_node.left.value != '#':
             children.append(current_node.left)
+        if current_node.right != None and current_node.right.value != '#':
+            children.append(current_node.right)
+
         return children
 
     def CorrectPath(self):
@@ -312,17 +313,19 @@ class SearchAlgorithms:
                 pq.put((parentNode.down.edgeCost, parentNode.down.id))
                 self.fullPath.append(parentNode.down.id)
 
+            if parentNode.left != None and parentNode.left.id not in self.fullPath:
+                parentNode.left.gOfN = parentNode.gOfN + parentNode.left.edgeCost
+                parentNode.left.previousNode = parentNode
+                pq.put((parentNode.left.edgeCost, parentNode.left.id))
+                self.fullPath.append(parentNode.left.id)
+
             if parentNode.right != None and parentNode.right.id not in self.fullPath:
                 parentNode.right.gOfN = parentNode.gOfN + parentNode.right.edgeCost
                 parentNode.right.previousNode = parentNode
                 pq.put((parentNode.right.edgeCost, parentNode.right.id))
                 self.fullPath.append(parentNode.right.id)
 
-            if parentNode.left != None and parentNode.left.id not in self.fullPath:
-                parentNode.left.gOfN = parentNode.gOfN + parentNode.left.edgeCost
-                parentNode.left.previousNode = parentNode
-                pq.put((parentNode.left.edgeCost, parentNode.left.id))
-                self.fullPath.append(parentNode.left.id)
+
 
         #get the full path
         #calculate total cost of the path
