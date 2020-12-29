@@ -131,3 +131,5 @@ dmypy.json
 .idea/AI.iml
 
 .idea/misc.xml
+AI-Package/.idea/vcs.xml
+AI-Package/.idea/workspace.xml
